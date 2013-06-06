@@ -1,0 +1,70 @@
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:p="http://primefaces.org/ui"
+   template="/WEB-INF/templates/default.xhtml">
+<ui:define name="content">
+
+<p class="smallTitle">Your Account</p>
+
+<p:tabView id="tabView">
+
+	<p:tab id="tab1" title="You">
+		This is your account page.<br/>
+		Your name: #{model.user.name}<br/>
+		Your email address: #{model.user.email}<br/>
+		Your customer number: #{model.user.id}<br/>
+		Number of orders: #{account.numOrders}<br/>
+	</p:tab>
+
+	<p:tab id="tab2" title="Your Tickets">
+
+		<p:accordionPanel var="order" value="#{account.orders}" >
+
+			<p:tab title="Order #{order.uuid} (#{order.state}) :: #{order.totalPrice} :: #{order.createdFormatted}">
+
+				<h:dataTable var="booking" 
+							border="0" 
+							value="#{order.bookings}" 
+							styleClass="ui-accordion-content ui-helper-reset ui-widget-content"
+							columnClasses="orderItemsCol1,orderItemsCol2"
+							rowClasses="orderItemsEven,orderItemsOdd" >
+					<h:column>
+						<h:graphicImage value="/event_images/#{booking.eventUid}.png" title="#{booking.eventName}" />
+					</h:column>
+					<h:column>
+						Reference Number: #{booking.referenceNumber}<br/>
+						Description: #{booking.description}<br/>
+						Price: #{booking.tarif.totalPrice}<br/>
+						<a href='#{request.contextPath}/secure/Pdf?PDFReference=#{booking.referenceNumber}'>Download Ticket</a><br/>
+						State: #{booking.state}<br/>
+					</h:column>
+				</h:dataTable>
+
+			</p:tab>
+
+		</p:accordionPanel>
+
+	</p:tab>
+
+</p:tabView>
+
+</ui:define>
+</ui:composition>
+

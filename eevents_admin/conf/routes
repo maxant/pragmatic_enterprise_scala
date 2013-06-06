@@ -1,0 +1,53 @@
+# *   Copyright 2013 Ant Kutschera
+# *   
+# *   Licensed under the Apache License, Version 2.0 (the "License");
+# *   you may not use this file except in compliance with the License.
+# *   You may obtain a copy of the License at
+# *
+# *       http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *   Unless required by applicable law or agreed to in writing, software
+# *   distributed under the License is distributed on an "AS IS" BASIS,
+# *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *   See the License for the specific language governing permissions and
+# *   limitations under the License.
+
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# misc
+GET     /                           	controllers.TicketController.index
+GET     /health                     	controllers.TicketController.health
+GET     /error                      	controllers.TicketController.error
+GET     /wait                      	    controllers.TicketController.wait_
+
+# show event
+GET     /selectEvent                	controllers.TicketController.selectEvent
+POST    /selectEvent                	controllers.TicketController.selectEvent
+
+# sales stats
+GET    /addSale                    		controllers.SalesStatsController.addSale
+GET    /customersWhoBought/:eventUid/:email	controllers.SalesStatsController.customerWhoBought(eventUid: String, email: String)
+
+# validate event
+POST    /validate                   	controllers.ValidationController.validateTicket
+GET     /validate                   	controllers.ValidationController.validateTicket
+POST	/ValidationService				controllers.ValidationController.validateTicketSoap
+GET		/ValidationServiceWSDL			controllers.ValidationController.validateTicketSoapWsdl
+
+
+# Monitoring live events
+GET     /liveEvent/:id/ws           	controllers.LiveEventController.registerWebsocket(id: String)
+GET     /monitorEvent/:id           	controllers.LiveEventController.showPage(id: String)
+
+# Authentication
+GET     /login                      	controllers.LoginController.login
+POST    /login                      	controllers.LoginController.authenticate
+GET     /logout                     	controllers.LoginController.logout
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               	controllers.Assets.at(path="/public", file)
+
+# test functionality, can be ignored!
+# GET     /do2pc                      	controllers.ValidationController.do2pc

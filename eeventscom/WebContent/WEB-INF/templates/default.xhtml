@@ -1,0 +1,80 @@
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:p="http://primefaces.org/ui"
+   template="/WEB-INF/templates/root.xhtml">
+<ui:define name="contents">
+
+<script type="text/javascript">
+	function handleComment(data){
+	    notification.show([data]);
+	}
+</script>
+
+	<table style="width: 100%">
+		<tr>
+			<td align="right">
+				<ui:fragment rendered="#{login.loggedIn}">
+					<p:growl widgetVar="notification" showDetail="true" sticky="true" escape="false" />
+					<p:socket onMessage="handleComment" channel="/user_#{login.user.id}" />
+				</ui:fragment>
+
+				<h:outputText value="#{login.error}" id="error2" styleClass="small error" />
+
+				<h:outputText value="#{login.user.name}!" rendered="#{login.loggedIn}" styleClass="small" />
+
+				<a href="#{request.contextPath}/cart.jsf" class="small">cart (<h:outputText id="headerCartQuantity" value="#{cart.numItems}" />)</a> |
+				<a href="#{request.contextPath}/index.jsf" class="small">home</a> |
+
+				<h:outputText value="email:" rendered="#{!login.loggedIn}" styleClass="small" />
+				<h:inputText value="#{login.email}" rendered="#{!login.loggedIn}" styleClass="small" />
+				
+				<h:outputText value="password:" rendered="#{!login.loggedIn}" styleClass="small" />
+				<h:inputSecret value="#{login.password}" rendered="#{!login.loggedIn}" styleClass="small" />
+				
+				<h:commandLink action="#{login.login}" value="login" styleClass="myButton" rendered="#{!login.loggedIn}" />
+				
+				<ui:fragment rendered="#{login.loggedIn}">
+					<a href="#{request.contextPath}/secure/account.jsf" class="small">my account</a>
+				</ui:fragment>
+				<h:outputText value="&#160;|&#160;" rendered="#{login.loggedIn}" />
+				<h:commandLink action="#{login.logout}" value="logout" rendered="#{login.loggedIn}" styleClass="small" />
+				
+				<ui:fragment rendered="#{login.isUserInRole('admin')}">
+					<h:outputText value="&#160;|&#160;" />
+					<a href="#{request.contextPath}/secure/admin" class="small">admin</a>
+					<h:outputText value="&#160;|&#160;" />
+					<a href="#{request.contextPath}/jamon/menu.jsp" class="small">jamon</a>
+				</ui:fragment>
+			</td>
+		</tr>
+		<tr>
+			<td><hr/></td>
+		</tr>
+		<tr>
+			<td>
+			    <ui:insert name="content">
+			        [Template content will be inserted here]
+			    </ui:insert>
+			</td>
+		</tr>
+	</table>
+
+</ui:define>
+</ui:composition>

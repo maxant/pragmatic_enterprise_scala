@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>Events</display-name>
+  <context-param>
+    <description>primefaces theme</description>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>bootstrap</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>client</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+<!--
+  <filter>
+    <filter-name>JamonFilter</filter-name>
+    <filter-class>com.jamonapi.http.JAMonServletFilter</filter-class>
+    <async-supported>true</async-supported>
+  </filter>
+  <filter-mapping>
+    <filter-name>JamonFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+-->
+  <welcome-file-list>
+    <welcome-file>index.jsf</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <error-page>
+    <error-code>401</error-code>
+    <location>/401.jsf</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error.jsf</location>
+  </error-page>
+  <error-page>
+    <exception-type>java.lang.Exception</exception-type>
+    <location>/error.jsf</location>
+  </error-page>
+  <servlet>
+    <servlet-name>Push Servlet</servlet-name>
+    <servlet-class>org.primefaces.push.PushServlet</servlet-class>
+    <async-supported>true</async-supported>
+  </servlet>
+  <servlet>
+    <servlet-name>jamon/jamonadmin</servlet-name>
+    <jsp-file>/jamon/jamonadmin.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>jamon/menu</servlet-name>
+    <jsp-file>/jamon/menu.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>jamon/exceptions</servlet-name>
+    <jsp-file>/jamon/exceptions.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>jamon/sql</servlet-name>
+    <jsp-file>/jamon/sql.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>jamon/query</servlet-name>
+    <jsp-file>/jamon/query.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>Mon</servlet-name>
+    <servlet-class>com.jamonapi.Mon</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Mon</servlet-name>
+    <url-pattern>/jamon/Mon</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Push Servlet</servlet-name>
+    <url-pattern>/primepush/*</url-pattern>
+  </servlet-mapping>
+  <security-constraint>
+    <display-name>SecureApplicationConstraint</display-name>
+    <web-resource-collection>
+      <web-resource-name>app</web-resource-name>
+      <url-pattern>/secure/*</url-pattern>
+    </web-resource-collection>
+    <web-resource-collection>
+      <web-resource-name>app2</web-resource-name>
+      <url-pattern>/someOtherSecureUrlToTestThisFile/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>registered</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+  <!-- add a second one for testing purposes -->
+  <security-constraint>
+    <web-resource-collection>
+        <web-resource-name>asdf</web-resource-name>
+        <url-pattern>/asf</url-pattern>
+        <http-method>POST</http-method>
+    </web-resource-collection>
+  </security-constraint>
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>events</realm-name>
+    <form-login-config>
+      <form-login-page>/login.jsp</form-login-page>
+      <form-error-page>/loginerror.jsp</form-error-page>
+    </form-login-config>
+  </login-config>
+  <security-role>
+    <role-name>registered</role-name>
+  </security-role>
+</web-app>

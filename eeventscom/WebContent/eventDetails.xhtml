@@ -1,0 +1,167 @@
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:p="http://primefaces.org/ui"
+   template="/WEB-INF/templates/default.xhtml">
+<ui:define name="content">
+
+<script type="text/javascript">
+	//load ads async
+	$.get("ads.jsf", function(data) {
+		$("#ads").html(data);
+	});
+</script>
+
+<p class="smallTitle">Event Details</p>
+<h:outputText styleClass="error" rendered="#{details.generalError != null}" value="#{details.generalError}"  />
+<table class="eventDetailsTable">
+	<tr>
+		<td width="1%" valign="top">
+			<h:graphicImage value="/event_images/#{model.selectedEvent.imgPath}" alt="#{model.selectedEvent.name}" />
+		</td>
+		<td valign="top">
+			<table>
+				<tr>
+					<td width="1%" class="eventName">#{model.selectedEvent.name}</td>
+					<td style="white-space: nowrap;">
+						<h:outputText value="#{model.selectedEvent.when}">
+							<f:convertDateTime 
+								pattern="dd. MMM yyyy, HH:mm" />
+						</h:outputText>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<table>
+						<tr>
+							<th>Tarif</th>
+							<th>Price</th>
+							<th>Description</th>
+							<th> </th>
+							<th># available</th>
+							<th>Quantity</th>
+							<th> <!-- errors --> </th>
+						</tr>
+						<ui:repeat var="tarif" value="#{model.selectedEvent.tarifs}">
+							<tr>
+								<td>#{tarif.name}</td>
+								<td>
+									<h:outputText value="#{tarif.price.value}">
+										<f:convertNumber type="currency" 
+													currencyCode="CHF" 
+													minFractionDigits="2" />
+									</h:outputText>
+								</td>
+								<td>#{tarif.description}</td>
+								<td>
+									<p:commandButton value="details" onclick="dlg_#{tarif.name}.show();" type="button" />
+									<p:dialog id="dialog_content_#{tarif.name}" header="Conditions for tarif #{tarif.name}" widgetVar="dlg_#{tarif.name}">  
+										<p class="conditions">#{tarif.conditions}</p>
+									</p:dialog> 
+								</td>
+								<td>#{tarif.availability}</td>
+								<td>
+									<h:inputText size="1" maxlength="1" id="quantity" 
+													value="#{details.chosenTarifs[tarif.name]}" 
+													validatorMessage="Quantity must be a number between 0 and 10" 
+													converterMessage="Quantity must be a number between 0 and 10" 
+													required="true"
+													requiredMessage="#{msgs['required']}"
+									>
+										<f:validateLongRange minimum="0" maximum="10" />
+										<f:convertNumber integerOnly="true" /> <!-- gives me a BigDecimal -->
+									</h:inputText>
+								</td>
+								<td>
+									<h:message for="quantity" styleClass="error" />
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+      					<p:rating 
+      							id="rater" 
+      							value="#{details.rating}"
+      							readonly="#{details.ratingReadonly}"
+      							cancel="false"
+      							>  
+            				<p:ajax event="rate" listener="#{details.doRating}" update="rater" />  
+            				<p:ajax event="cancel" listener="#{details.doRating}" update="rater" />  
+		        		</p:rating>  
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<h:outputText value="#{model.selectedEvent.description}" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p:commandButton action="#{details.addToCart}" ajax="false" value="Add to cart"  />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					
+						<ui:fragment rendered="#{login.loggedIn}">
+							<p:editor value="#{details.commentToAdd}" controls="bold italic underline strikethrough" height="75" />
+							<p:commandButton action="#{details.addComment}" update="commentsTable" value="Add comment"  />
+						</ui:fragment>
+					
+						<br/>
+						Comments:
+						<br/>
+						<h:dataTable id="commentsTable" 
+									var="comment" 
+									border="0" 
+									value="#{model.selectedEvent.comments}" 
+									styleClass="comments"
+									columnClasses="commentsCol1,commentsCol2, commentsCol3"
+									rowClasses="commentsEven,commentsOdd" >
+							<h:column>#{comment.username}:</h:column>
+							<h:column><h:outputText escape="false" value="#{comment.comment}" style="width: 300px;"/> </h:column>
+						    <h:column>
+								<h:outputText value="#{comment.when}" style="white-space: nowrap;">
+									<f:convertDateTime pattern="dd. MMM yyyy, HH:mm" />
+								</h:outputText>
+						    </h:column>
+						</h:dataTable>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top">
+			<p:tagCloud model="#{tagCloud.model}"></p:tagCloud>
+			<br />
+			<!-- http://ajaxload.info/ -->
+			<div id="ads" onclick="javascript: alert('Freak!');">
+				<h:graphicImage library="images" name="loading.gif" />
+			</div>
+		</td>
+	</tr>
+	<tr>
+	</tr>
+</table>
+
+</ui:define>
+</ui:composition>
+

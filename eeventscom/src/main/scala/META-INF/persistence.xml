@@ -1,0 +1,38 @@
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="theDatabase" transaction-type="JTA">
+		<jta-data-source>jdbc/MyXaDS</jta-data-source>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+		<properties>
+			<property name="javax.persistence.logging.level" value="FINE" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="eclipselink.logging.level" value="FINE"/>
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="false" />
+			<property name="hibernate.generate_statistics" value="false" />
+			<property name="hibernate.use_sql_comments" value="false" />
+			<property name="show_sql" value="true" />
+        	<property name="format_sql" value="false" />
+        	<property name="use_sql_comments" value="false" />
+        	<property name="org.hibernate.engine.jdbc.spi.SqlStatementLogger" value="WARN" />
+		</properties>
+	</persistence-unit>
+</persistence>

@@ -1,0 +1,12 @@
+The code in this project is part of the book "Pragmatic Enterprise Scala" by Ant Kutschera, ISBN 978-1-4840-0766-2.
+
+
+Getting Started
+===============
+
+run:
+
+mvn validate
+
+This will download all the dependencies which the project needs.  You can then import the project as an existing project into eclipse (do not import it as a maven project!)
+

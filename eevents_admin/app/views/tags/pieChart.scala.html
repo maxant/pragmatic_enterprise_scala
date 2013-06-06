@@ -1,0 +1,60 @@
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+
+@* ********************************************************
+ * custom tag to create a pie chart, based on 
+ * http://www.jqplot.com/deploy/dist/examples/pieTest.html
+ * using the given data.  it is rendered into the div with 
+ * the given id, using the given colours.
+ * ******************************************************** *@
+
+@(idOfDiv: String, seriesNames: Array[String], colours: Array[String])
+<script src="@routes.Assets.at("javascripts/jquery.jqplot.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/jqplot.pieRenderer.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+function redraw(i, j) {
+    
+    var series = [[
+                   ['@seriesNames(0)',parseInt(i)],
+                   ['@seriesNames(1)',parseInt(j)]
+                 ]]
+    $.jqplot(
+        '@idOfDiv', 
+        series,
+        {
+            grid: {
+                   drawBorder: false, 
+                   drawGridlines: false,
+                   background: '#ffffff',
+                   shadow:false
+               },
+            gridPadding: {top:0, bottom:0, left:0, right:0},
+            seriesDefaults: {
+                seriesColors: ['@colours.mkString("','")'],
+                renderer:$.jqplot.PieRenderer, 
+                trendline:{ show:false }, 
+                rendererOptions: { 
+                    padding: 8, 
+                    showDataLabels: false, 
+                    highlightColors: 
+                        ['@colours.mkString("','")'] }
+            },
+            legend: {
+                show:false,
+            }
+        });
+}
+</script>

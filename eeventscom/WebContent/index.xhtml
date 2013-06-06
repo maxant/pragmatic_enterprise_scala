@@ -1,0 +1,132 @@
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:p="http://primefaces.org/ui"
+   template="/WEB-INF/templates/default.xhtml">
+<ui:define name="content">
+
+<script type="text/javascript">
+	$(function(){
+		//add highlighting to the table
+		$("div.teasersTableCells").mouseover(highlight).mouseout(unhighlight);
+
+		//load ads async
+		$.get("ads.jsf", function(data) {
+			$("#ads").html(data);
+		});
+	});
+
+	function highlight() {
+		$(this).addClass('teaserTableHighlighted');
+	}
+	
+	function unhighlight() {
+		$(this).removeClass('teaserTableHighlighted');
+	}
+	
+	function gotoDetails(uid){
+		var url = "eventDetails.jsf?uid=" + uid;
+		window.location = url;
+	}
+	
+	function showCity(city){
+		var inp = $('#form\\:city_input');
+		inp.val(city);
+		var but = $('#form\\:search');
+		but.click();
+	}
+</script>
+
+<h:outputText styleClass="error ui-icon ui-icon-alert" value="#{home.generalError}" rendered="#{home.generalError != null}" />
+<div class="search">
+<p class="smallTitle">#{msgs.search}</p>
+from: <p:calendar value="#{home.from}" pattern="dd.MM.yyyy" mode="popup" id="from" />
+to: <p:calendar value="#{home.to}" pattern="dd.MM.yyyy" />
+search for: <p:inputText value="#{home.searchText}" />
+city: <p:autoComplete id="city" forceSelection="true" completeMethod="#{home.getCities}" value="#{home.city}" />
+<p:commandButton id="search" action="#{home.update}" ajax="false" value="search"  />
+</div>
+<table border="0">
+<tr>
+<td>
+	<ui:repeat var="event" value="#{home.teasers}" id="teasers" varStatus="status">
+		<table border="0" style="display: inline-table;">
+		<tr>
+			<td valign="top">
+			<div class="teasersTableCells" onClick="gotoDetails('#{event.uid}');">
+				<table border="0">
+					<tr>
+						<td valign="top" rowspan="2">
+							<h:graphicImage value="/event_images/#{event.imgPath}" title="#{event.name}" />
+						</td>
+						<td>
+							<h:outputText class="eventName" value="#{event.name}" />
+							<br/>
+							<h:outputText class="eventCity" value="#{event.address.city}" />
+						</td>
+					</tr>
+					<tr>
+						<td class="eventPrice">
+							<h:outputText class="eventDate" value="#{event.date}">
+								<f:convertDateTime 
+									pattern="dd. MMM yyyy, HH:mm" />
+							</h:outputText>
+							<br/>From:
+							<h:outputText value="#{event.examplePrice.value}">
+ 								<f:convertNumber type="currency" 
+											currencyCode="CHF" 
+											minFractionDigits="2" />
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" class="eventDescription" valign="top">
+							<h:outputText value="#{event.description}" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" align="center">
+							<a class="myButton" href="#">Details/Book...</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			</td>
+		</tr>
+		</table>
+    </ui:repeat>
+</td>
+<td valign="top" align="center" width="1%">
+	<p:tagCloud model="#{tagCloud.model}"></p:tagCloud>
+	<br />
+	<!-- http://ajaxload.info/ -->
+	<div id="ads" onclick="javascript: alert('Freak!');">
+		<h:graphicImage library="images" name="loading.gif" />
+	</div>
+	<br/>
+	<h:commandLink value="Click here to see an exception!" action="#{home.exception}" />
+</td>
+</tr>
+</table>
+
+<h:outputText value="#{sessionModelHack.dummyString}" />
+
+</ui:define>
+</ui:composition>
+

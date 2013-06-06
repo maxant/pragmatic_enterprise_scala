@@ -1,0 +1,57 @@
+<!-- 
+ *   Copyright 2013 Ant Kutschera
+ *   
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+-->
+@(user: Option[ch.maxant.scalabook.validation.integration.UserRepository.User])(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>eEvents.com</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery.jqplot.min.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    </head>
+    <body>
+    <table width="100%" border="0">
+    <tr>
+    <td valign="top" width="1%">
+        <a href='/'>
+            <img src="@routes.Assets.at("images/logo.png")" />
+        </a>
+    </td>
+    <td valign="top">
+        <table width="100%" border="0">
+            <tr>
+                <td align="right" class="small">
+                    @if(user.isDefined){
+                        @user.get.name |
+                    }
+                    <a href="/">home</a> |
+                    <a href="logout">logout</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @content
+                </td>
+             </tr>
+        </table>
+    </td>
+    </tr>
+    </table>
+    </body>
+</html>
