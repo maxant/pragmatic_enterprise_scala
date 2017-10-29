@@ -1,7 +1,7 @@
 Pragmatic Enterprise Scala
 ==========================
 
-The code to go the book I have written, available at:
+The code to go with the book I have written, available at:
 
 - [https://www.createspace.com/4228776](https://www.createspace.com/4228776)
 - [http://www.amazon.co.uk/Pragmatic-Enterprise-Scala-Ant-Kutschera/dp/1484007662/](http://www.amazon.co.uk/Pragmatic-Enterprise-Scala-Ant-Kutschera/dp/1484007662/)
